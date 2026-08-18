@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-paper text-ink font-sans antialiased;
+    background-image: radial-gradient(#10101416 1px, transparent 1px);
+    background-size: 18px 18px;
+  }
+  ::selection {
+    @apply bg-yellow text-ink;
+  }
+  :focus-visible {
+    outline: 3px solid #2d5bff;
+    outline-offset: 2px;
+  }
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f5f0e6;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #101014;
+    border: 3px solid #f5f0e6;
+  }
+}
+
+@layer components {
+  /* Halftone dot field — the comic-print signature */
+  .halftone {
+    background-image: radial-gradient(currentColor 1.6px, transparent 1.7px);
+    background-size: 8px 8px;
+  }
+  .nb {
+    @apply border-3 border-ink shadow-nb bg-card;
+  }
+  .nb-hover {
+    @apply transition-all duration-150 hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-nblg;
+  }
+  .eyebrow {
+    @apply font-mono text-[11px] font-bold uppercase tracking-[.18em];
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
