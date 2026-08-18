@@ -1,13 +1,42 @@
 import React, { useMemo } from 'react';
 import { user, badges, buildActivity } from '../data/mock';
 import { Card, Btn, Tag, Icon, PageHead, SectionTitle, FILL } from '../components/ui';
-import SpiderMark from '../components/SpiderMark';
+import HeroArt from '../components/HeroArt';
 
 const HEAT = ['bg-paper', 'bg-yellow', 'bg-pink', 'bg-red', 'bg-blue'];
 
-function Heatmap() {
+function Heatmap({ cells }) {
+  return (
+    <div className="flex flex-col gap-6 md:flex-row md:items-start">
+      <div className="flex-1 min-w-0">
+        <div className="mt-3 overflow-x-auto pb-2">
+          <div className="grid w-max grid-flow-col grid-rows-7 gap-[3px]">
+            {cells.map((v, i) => (
+              <span
+                key={i}
+                title={`Level ${v}`}
+                className={`h-[11px] w-[11px] border border-ink ${HEAT[v]}`}
+              />
+            ))}
+          </div>
+        </div>
+        <div className="mt-2 flex items-center gap-1.5">
+          <span className="font-mono text-[9px] font-bold uppercase tracking-widest text-muted">Less</span>
+          {HEAT.map((c, i) => (
+            <span key={i} className={`h-[11px] w-[11px] border border-ink ${c}`} />
+          ))}
+          <span className="font-mono text-[9px] font-bold uppercase tracking-widest text-muted">More</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function Profile() {
+  const unlocked = badges.filter((b) => b.unlocked).length;
+  const locked = badges.length - unlocked;
+
   const cells = useMemo(buildActivity, []);
-  
   const activeDays = cells.filter((c) => c > 0).length;
   
   let activeWeeks = 0;
@@ -28,128 +57,149 @@ function Heatmap() {
   }
 
   return (
-    <div className="flex flex-col gap-6 md:flex-row md:items-start">
-      <div className="flex-1 min-w-0">
-        <div className="eyebrow text-muted">Learning activity · one year of daily visits</div>
-        <div className="mt-3 overflow-x-auto pb-2">
-          <div className="grid w-max grid-flow-col grid-rows-7 gap-[3px]">
-            {cells.map((v, i) => (
-              <span
-                key={i}
-                title={`Level ${v}`}
-                className={`h-[11px] w-[11px] border border-ink ${HEAT[v]}`}
-              />
-            ))}
-          </div>
-        </div>
-        <div className="mt-2 flex items-center gap-1.5">
-          <span className="font-mono text-[9px] font-bold uppercase tracking-widest text-muted">Less</span>
-          {HEAT.map((c, i) => (
-            <span key={i} className={`h-[11px] w-[11px] border border-ink ${c}`} />
-          ))}
-          <span className="font-mono text-[9px] font-bold uppercase tracking-widest text-muted">More</span>
-        </div>
-      </div>
-      
-      <div className="flex gap-4 md:flex-col shrink-0 justify-around md:justify-start">
-        {[
-          ['Active days', activeDays],
-          ['Active weeks', activeWeeks],
-          ['Longest streak', longestStreak]
-        ].map(([k, v]) => (
-          <div key={k}>
-            <div className="font-display text-2xl leading-none">{v}</div>
-            <div className="font-mono text-[9px] font-bold uppercase tracking-widest text-muted mt-0.5">{k}</div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-export default function Profile() {
-  const unlocked = badges.filter((b) => b.unlocked).length;
-  const locked = badges.length - unlocked;
-
-  return (
-    <div className="space-y-8">
-      {/* BLOCK A — page header */}
+    <div className="space-y-8 animate-fade-in">
+      {/* HEADER */}
       <PageHead
-        eyebrow="Agent Dossier"
+        boxed={true}
+        eyebrow="Hero Dossier • Secure Archive"
+        icon="Shield"
         title="Multiverse Agent Profile"
-        sub="Manage your account, parameters and mission credentials."
+        sub="Manage account parameters, active dimension credentials, and adaptive telemetry"
         right={
-          <Btn color="card" icon="Settings2">
-            Edit settings
-          </Btn>
+          <div className="rounded-lg border-3 border-ink bg-yellow px-3 py-1.5 font-display uppercase text-ink shadow-nbsm inline-block rotate-2">
+            * Earth-1610 HQ *
+          </div>
         }
       />
 
-      {/* BLOCK B — identity card (left) + stat row (right) */}
-      <div className="grid gap-6 lg:grid-cols-[300px_1fr]">
-        <Card className="p-6 text-center">
-          <div className="relative mx-auto grid h-28 w-28 place-items-center border-3 border-ink bg-red shadow-nb overflow-hidden">
-            <SpiderMark className="absolute inset-0 m-auto h-24 w-24 text-ink opacity-15" />
-            <span className="relative font-display text-5xl text-onaccent">{user.initial}</span>
+      {/* ROW */}
+      <div className="grid gap-6 lg:grid-cols-[340px_1fr]">
+        
+        {/* IDENTITY CARD */}
+        <Card className="flex flex-col items-center p-6 text-center">
+          <div className="relative mt-2 mb-6">
+            <Tag color="yellow" className="absolute -top-3 left-1/2 -translate-x-1/2 z-20 -rotate-2">
+              Clearance V
+            </Tag>
+            <div className="relative flex h-28 w-28 items-center justify-center">
+              {/* Chromatic border effect */}
+              <div className="absolute inset-0 bg-cyan translate-x-[4px] translate-y-[4px] rounded-xl border-3 border-ink" />
+              <div className="absolute inset-0 bg-pink -translate-x-[4px] -translate-y-[4px] rounded-xl border-3 border-ink" />
+              {/* Main tile */}
+              <div className="relative z-10 flex h-full w-full items-center justify-center rounded-xl border-3 border-ink bg-ink text-onaccent font-display text-5xl">
+                {user.initial}
+              </div>
+            </div>
           </div>
-          <h2 className="mt-4 font-display text-2xl uppercase leading-none">{user.name}</h2>
-          <p className="mt-1.5 text-xs font-bold text-muted">{user.email}</p>
-          <div className="mt-3 flex justify-center">
-            <Tag color="card">{user.status || 'Active Multiverse User'}</Tag>
+          
+          <h2 className="font-display text-3xl uppercase leading-none">{user.name}</h2>
+          <p className="mt-1.5 text-sm font-bold text-muted">{user.email}</p>
+          
+          <div className="relative mt-6 mb-6 h-32 w-full overflow-hidden rounded-lg border-3 border-ink bg-cyan">
+            <div className="absolute inset-0 bg-gradient-to-r from-red to-pink" />
+            <div className="absolute inset-0 halftone text-onaccent/20" />
+            
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-90 mix-blend-screen overflow-hidden">
+              <HeroArt className="h-[120%] w-[120%] object-contain opacity-50" />
+            </div>
           </div>
-          <div className="mt-5 border-t-3 border-ink pt-5">
-            <Btn color="red" icon="LogOut" className="w-full">
+          
+          <div className="mt-auto w-full pt-4">
+            <Btn 
+              color="red" 
+              className="w-full"
+              onClick={() => {
+                import('../lib/auth').then(({ signOut }) => {
+                  signOut();
+                  window.location.href = '/login';
+                });
+              }}
+            >
               Sign out of HQ
             </Btn>
           </div>
         </Card>
 
-        <div>
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 h-full">
+        {/* RIGHT COLUMN */}
+        <div className="space-y-6">
+          {/* STAT TILES */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              ['Rank', user.rank, 'blue', 'Shield'],
-              ['Courses', user.enrolled, 'card', 'BookOpen'],
-              ['Completed', user.completed, 'lime', 'CheckCircle2'],
+              ['Courses Enrolled', user.enrolled, 'cyan', 'BookOpen'],
+              ['Completed', user.completed, 'red', 'CheckCircle2'],
               ['Daily Streak', `${user.streak}d`, 'yellow', 'Flame'],
-              ['Trophies', user.trophies || 3, 'pink', 'Trophy'],
+              ['Badges Earned', user.trophies || 4, 'pink', 'Trophy'],
             ].map(([label, value, color, icon]) => (
-              <Card key={label} color={color} className="p-4 text-center flex flex-col justify-center items-center">
-                <Icon name={icon} className="h-5 w-5 mb-2" />
-                <div className="font-display text-2xl leading-none">{value}</div>
-                <div className="mt-1.5 font-mono text-[9px] font-bold uppercase tracking-widest opacity-80">
+              <Card key={label} className="p-5 flex flex-col justify-between">
+                <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border-3 border-ink text-ink shadow-nbsm ${FILL[color]}`}>
+                  <Icon name={icon} className="h-5 w-5" />
+                </div>
+                <div className="mt-4 font-display text-3xl leading-none">{value}</div>
+                <div className="mt-1 font-mono text-[9px] font-bold uppercase tracking-widest text-muted">
                   {label}
                 </div>
               </Card>
             ))}
           </div>
+
+          {/* HERO TELEMETRY SPECIFICATIONS */}
+          <Card className="p-6 sm:p-8">
+            <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-cyan pb-2">
+              <h2 className="font-display text-xl uppercase text-cyan">Hero Telemetry Specifications</h2>
+              <Tag color="yellow" className="-rotate-1">Encrypted</Tag>
+            </div>
+            
+            <div className="grid gap-6 sm:grid-cols-2 mb-8">
+              {[
+                ['Hero codename', user.codename, 'User'],
+                ['Multiverse network email', user.email, 'Mail'],
+              ].map(([k, v, ic]) => (
+                <div key={k}>
+                  <div className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted mb-2">{k}</div>
+                  <div className="flex items-center gap-2">
+                    <Icon name={ic} className="h-4 w-4 text-ink opacity-70" />
+                    <span className="font-bold text-ink">{v}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            {/* INSET BOX FOR LEARNING ACTIVITY */}
+            <div className="rounded-lg border-3 border-ink bg-paper p-5">
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-5">
+                <div>
+                  <div className="flex items-center gap-2 font-bold text-ink text-base">
+                    <Icon name="Calendar" className="h-4 w-4" />
+                    Learning Activity
+                  </div>
+                  <div className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted mt-1">
+                    One year of daily visits
+                  </div>
+                </div>
+                
+                <div className="flex flex-wrap gap-2">
+                  <div className="flex items-center gap-1.5 rounded-lg border-3 border-ink bg-card px-2 py-1 shadow-nbsm">
+                    <Icon name="Calendar" className="h-3 w-3 text-cyan" />
+                    <span className="font-mono text-[10px] font-bold uppercase">{activeDays} Active Days</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 rounded-lg border-3 border-ink bg-card px-2 py-1 shadow-nbsm">
+                    <Icon name="TrendingUp" className="h-3 w-3 text-red" />
+                    <span className="font-mono text-[10px] font-bold uppercase">{activeWeeks} This Week</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 rounded-lg border-3 border-ink bg-card px-2 py-1 shadow-nbsm">
+                    <Icon name="Flame" className="h-3 w-3 text-yellow" />
+                    <span className="font-mono text-[10px] font-bold uppercase">{longestStreak}d Best Streak</span>
+                  </div>
+                </div>
+              </div>
+              
+              <Heatmap cells={cells} />
+            </div>
+          </Card>
         </div>
       </div>
 
-      {/* BLOCK C — Hero Telemetry Specification panel */}
-      <Card className="p-6 sm:p-8">
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-          <h2 className="font-display text-xl uppercase">Hero Telemetry Specification</h2>
-          <Tag color="card">Encrypted</Tag>
-        </div>
-        
-        <div className="grid gap-4 sm:grid-cols-2">
-          {[
-            ['Hero codename', user.codename],
-            ['Multiverse network', user.network],
-          ].map(([k, v]) => (
-            <div key={k} className="border-3 border-ink bg-paper p-3">
-              <div className="font-mono text-[9px] font-bold uppercase tracking-widest text-muted">{k}</div>
-              <div className="mt-1 font-display text-lg uppercase">{v}</div>
-            </div>
-          ))}
-        </div>
-        
-        <div className="mt-6 border-t-3 border-ink pt-6">
-          <Heatmap />
-        </div>
-      </Card>
-
-      {/* BLOCK D — Achievement badges */}
+      {/* ACHIEVEMENT BADGES */}
       <div>
         <SectionTitle right={<Tag color="card">{unlocked} unlocked · {locked} locked</Tag>}>
           Multiverse Achievement Badges

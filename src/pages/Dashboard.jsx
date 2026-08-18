@@ -1,230 +1,189 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid } from 'recharts';
-import { courses, velocityData, preLearningTopics, user } from '../data/mock';
-import { Card, Btn, Tag, Search, Icon, PageHead, SectionTitle, Progress, FILL } from '../components/ui';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { BarChart, Bar, Cell, XAxis, ResponsiveContainer } from 'recharts';
+import { user, velocityData, badges } from '../data/mock';
+import { Card, Btn, Tag, Icon, SectionTitle } from '../components/ui';
 import { useTheme } from '../lib/theme';
-import { Thumb } from '../components/Thumb';
-
-const readVar = (n, alpha) =>
-  `rgb(${getComputedStyle(document.documentElement).getPropertyValue(n).trim()}${alpha ? ` / ${alpha}` : ''})`;
-
-function CourseCard({ c }) {
-  const navigate = useNavigate();
-  return (
-    <Card hover className="flex flex-col overflow-hidden">
-      <Thumb course={c} />
-      <div className="flex flex-1 flex-col p-4">
-        <h3 className="font-display text-base uppercase leading-tight">{c.title}</h3>
-        <p className="mt-2 flex-1 text-sm font-medium text-muted">{c.blurb}</p>
-        <div className="mt-3 flex flex-wrap gap-1.5">
-          {c.tags.map((t) => (
-            <span key={t} className="border-2 border-ink px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase">
-              {t}
-            </span>
-          ))}
-        </div>
-        <div className="mt-3 flex items-center gap-3 font-mono text-[10px] font-bold uppercase tracking-widest text-muted">
-          <span className="flex items-center gap-1">
-            <Icon name="Layers" className="h-3 w-3" /> {c.missions?.length || c.missions} missions
-          </span>
-          <span className="flex items-center gap-1">
-            <Icon name="Clock" className="h-3 w-3" /> {c.hours} hr
-          </span>
-        </div>
-        <div className="mt-4">
-          <Btn color={c.color} className="w-full" onClick={() => navigate(`/mission/${c.id}`)}>
-            Start mission
-          </Btn>
-        </div>
-      </div>
-    </Card>
-  );
-}
+import HeroArt from '../components/HeroArt';
 
 export default function Dashboard() {
-  const [query, setQuery] = useState('');
-  const [picked, setPicked] = useState(['Linear Algebra']);
   const { theme } = useTheme();
   const [c, setC] = useState(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setC({
-        border: readVar('--c-border'),
-        border18: readVar('--c-border', '0.18'),
-        red: readVar('--c-red'),
-        blue: readVar('--c-blue'),
-        yellow: readVar('--c-yellow'),
-        card: readVar('--c-card'),
-        ink: readVar('--c-border'),
+        border: `rgb(${getComputedStyle(document.documentElement).getPropertyValue('--c-border').trim()})`,
+        cyan: `rgb(${getComputedStyle(document.documentElement).getPropertyValue('--c-cyan').trim()})`,
+        red: `rgb(${getComputedStyle(document.documentElement).getPropertyValue('--c-red').trim()})`,
+        ink: `rgb(${getComputedStyle(document.documentElement).getPropertyValue('--c-border').trim()})`,
       });
     }, 10);
     return () => clearTimeout(timer);
   }, [theme]);
 
-  const results = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return courses;
-    return courses.filter(
-      (co) =>
-        co.title.toLowerCase().includes(q) ||
-        co.category.toLowerCase().includes(q) ||
-        co.tags.some((t) => t.toLowerCase().includes(q))
-    );
-  }, [query]);
+  const hasEnrolled = user.enrolled > 0;
+  
+  // Velocity calculation
+  const totalVelocity = velocityData.reduce((acc, curr) => acc + curr.velocity, 0);
+  const avgVelocity = totalVelocity / velocityData.length;
 
-  const toggle = (t) =>
-    setPicked((p) => (p.includes(t) ? p.filter((x) => x !== t) : [...p, t]));
+  // Progress stats
+  const unlockedBadges = badges.filter(b => b.unlocked).length;
 
   return (
-    <div className="space-y-10">
-      <Card className="relative overflow-hidden p-8 sm:p-10 animate-pop">
-        <div className="absolute inset-y-0 left-0 w-4 border-r-3 border-ink bg-red halftone" />
-        <div className="relative z-10 pl-2 sm:pl-4">
-          <div className="eyebrow mb-2 text-muted">Origin Point</div>
-          <h1 className="font-display text-4xl uppercase leading-none tracking-tight sm:text-5xl lg:text-6xl">
-            Multiverse<br />Learning
-          </h1>
-          <p className="mt-4 max-w-2xl text-base font-medium text-muted sm:text-lg">
-            Every learner runs a different timeline. Pick a thread and start your course.
-          </p>
-          <div className="mt-8">
-            <Link to="/courses">
-              <Btn color="red" icon="Rocket">
-                Start your course
+    <div className="space-y-10 animate-fade-in">
+      
+      {/* ROW 1 */}
+      <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
+        {/* HERO PANEL */}
+        <Card className="relative overflow-hidden min-h-[300px] border-0 ring-3 ring-ink bg-gradient-to-r from-red via-pink to-violet-800 p-8 sm:p-10 flex flex-col justify-center">
+          <div className="absolute inset-0 halftone text-onaccent/20" />
+          
+          <HeroArt className="absolute bottom-0 right-0 h-[115%] w-auto object-contain object-bottom pointer-events-none hidden md:block drop-shadow-xl" />
+
+          <div className="relative z-10 max-w-xl flex flex-col items-start w-full md:w-1/2">
+            <div className="rounded-lg border-3 border-ink bg-yellow px-3 py-1 font-display uppercase text-ink shadow-nbsm inline-block mb-6 -rotate-1">
+              * Multiverse Learning HQ *
+            </div>
+            
+            <h1 className="heading-shadow font-display text-4xl uppercase leading-[1.1] tracking-tight text-onaccent sm:text-5xl mb-5 max-w-[500px]">
+              {hasEnrolled ? "Ready to continue your mission?" : "Ready to start your first course today?"}
+            </h1>
+            
+            <p className="mb-8 font-bold text-onaccent text-lg">
+              Your cognitive patterns look great. Keep up the multiverse momentum!
+            </p>
+            
+            <Link to={hasEnrolled ? "/my-learning" : "/courses"}>
+              <Btn color="cyan" icon={hasEnrolled ? "Play" : "Rocket"} className="text-ink">
+                {hasEnrolled ? "Resume Learning" : "Start First Course"}
               </Btn>
             </Link>
           </div>
-        </div>
-      </Card>
-
-      {/* Velocity + side stats */}
-      <div className="grid gap-5 lg:grid-cols-3">
-        <Card className="p-5 lg:col-span-2">
-          <SectionTitle
-            right={<Tag color="lime">Live</Tag>}
-          >
-            Learning Velocity
-          </SectionTitle>
-          <div className="h-56">
-            {c && (
-              <ResponsiveContainer width="100%" height="100%" key={`line-${theme}`}>
-                <LineChart data={velocityData} margin={{ top: 8, right: 8, left: -22, bottom: 0 }}>
-                  <CartesianGrid stroke={c.border18} strokeDasharray="4 4" />
-                  <XAxis dataKey="day" tick={{ fontSize: 11, fontWeight: 700, fill: c.border }} stroke={c.border} strokeWidth={2} />
-                  <YAxis tick={{ fontSize: 11, fontWeight: 700, fill: c.border }} stroke={c.border} strokeWidth={2} />
-                  <Tooltip
-                    contentStyle={{ border: `3px solid ${c.border}`, boxShadow: `4px 4px 0 ${c.border}`, borderRadius: 0, fontWeight: 700, backgroundColor: c.card, color: c.ink }}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="velocity"
-                    stroke={c.red}
-                    strokeWidth={4}
-                    dot={{ r: 5, fill: c.yellow, stroke: c.border, strokeWidth: 3 }}
-                    activeDot={{ r: 7, fill: c.blue, stroke: c.border, strokeWidth: 3 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            )}
-          </div>
         </Card>
 
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-1">
-          <Card color="blue" className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="font-mono text-[10px] font-bold uppercase tracking-[.16em]">Mastery</span>
-              <Icon name="Brain" className="h-5 w-5" />
-            </div>
-            <div className="mt-2 font-display text-4xl leading-none">88%</div>
-            <div className="mt-3 border-3 border-ink bg-card">
-              <div className="h-3 bg-yellow" style={{ width: '88%' }} />
-            </div>
-          </Card>
-          <Card color="yellow" className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="font-mono text-[10px] font-bold uppercase tracking-[.16em]">Time Budget</span>
-              <Icon name="Hourglass" className="h-5 w-5" />
-            </div>
-            <div className="mt-2 font-display text-4xl leading-none">2.7 hr</div>
-            <p className="mt-1.5 text-xs font-bold text-ink/70">of 4 hr daily target</p>
-          </Card>
-        </div>
-      </div>
-
-      {/* Search */}
-      <div>
-        <Search
-          value={query}
-          onChange={setQuery}
-          placeholder="Search multiverse courses, topics, concepts…"
-        />
-      </div>
-
-      {/* Recommendations */}
-      <div>
-        <SectionTitle right={<Link to="/courses" className="eyebrow underline">View all</Link>}>
-          Multiverse Recommendations
-        </SectionTitle>
-        {results.length === 0 ? (
-          <Card className="p-8 text-center font-semibold text-muted">
-            No timeline matches “{query}”. Try a broader term.
-          </Card>
-        ) : (
-          <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-            {results.map((c) => (
-              <CourseCard key={c.id} c={c} />
-            ))}
+        {/* REVISION QUEUE CARD */}
+        <Card className="flex flex-col p-6">
+          <div className="flex items-center gap-2 mb-8">
+            <Icon name="Clock" className="h-5 w-5 text-cyan" />
+            <h2 className="font-display uppercase text-xl">Revision Queue</h2>
           </div>
-        )}
+          
+          <div className="flex-1 flex flex-col items-center justify-center text-center">
+            <Icon name="CheckCircle2" className="h-16 w-16 text-cyan mb-4" />
+            <h3 className="font-display text-2xl uppercase tracking-wide">Queue Clear!</h3>
+          </div>
+          
+          <div className="mt-8">
+            <Link to="/my-learning">
+              <Btn color="card" icon="ChevronRight" iconPosition="right" className="w-full justify-center">
+                View Learning Wall
+              </Btn>
+            </Link>
+          </div>
+        </Card>
       </div>
 
-      {/* Pre-learning assignment */}
-      <Card color="yellow" className="p-6">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <span className="eyebrow">Calibration</span>
-            <h2 className="mt-1 font-display text-2xl uppercase leading-none">Pre-Learning Assignment</h2>
+      {/* ROW 2 */}
+      <div className="grid gap-6 lg:grid-cols-4">
+        {/* LEARNING VELOCITY */}
+        <div className="lg:col-span-2 space-y-4">
+          <SectionTitle icon="BarChart3">Learning Velocity</SectionTitle>
+          <Card className="p-6 h-64 flex flex-col">
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+              <div className="flex items-center gap-2 text-cyan">
+                <Icon name="Zap" className="h-4 w-4" />
+                <span className="font-mono text-[10px] font-bold uppercase tracking-widest">Weekly Neural Output</span>
+              </div>
+              <Tag color="yellow">+28% Velocity</Tag>
+            </div>
+            <div className="border-b-[1px] border-ink mb-6" />
+            
+            <div className="flex-1">
+              {c && (
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={velocityData} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
+                    <XAxis 
+                      dataKey="day" 
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fontSize: 12, fontWeight: 700, fill: c.border }} 
+                      dy={10}
+                    />
+                    <Bar 
+                      dataKey="velocity" 
+                      radius={[8, 8, 0, 0]} 
+                      stroke={c.ink} 
+                      strokeWidth={3}
+                    >
+                      {velocityData.map((entry, index) => (
+                        <Cell 
+                          key={`cell-${index}`} 
+                          fill={entry.velocity > avgVelocity ? c.red : c.cyan} 
+                        />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              )}
+            </div>
+          </Card>
+        </div>
+
+        {/* YOUR PROGRESS */}
+        <div className="space-y-4">
+          <SectionTitle icon="Target">Your Progress</SectionTitle>
+          <div className="flex flex-col gap-4 h-64">
+            <Card className="flex items-center p-4 h-1/2">
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border-3 border-ink bg-red text-onaccent shadow-nbsm mr-4">
+                <Icon name="Trophy" className="h-6 w-6" />
+              </div>
+              <div>
+                <div className="font-display text-4xl leading-none">{user.completed}</div>
+                <div className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted mt-1">Completed</div>
+              </div>
+            </Card>
+            <Card className="flex items-center p-4 h-1/2">
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border-3 border-ink bg-yellow text-ink shadow-nbsm mr-4">
+                <Icon name="Zap" className="h-6 w-6" />
+              </div>
+              <div>
+                <div className="font-display text-4xl leading-none">{unlockedBadges}</div>
+                <div className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted mt-1">Badges</div>
+              </div>
+            </Card>
           </div>
-          <Tag color="card">Step 1 of 3</Tag>
-        </div>
-        <p className="mt-3 max-w-2xl text-sm font-bold text-ink/80">
-          Which concepts are you already familiar with? We skip what you know and route you straight
-          to the gaps.
-        </p>
-
-        <div className="mt-5 flex flex-wrap gap-2">
-          {preLearningTopics.map((t) => {
-            const on = picked.includes(t);
-            return (
-              <button
-                key={t}
-                onClick={() => toggle(t)}
-                className={`flex items-center gap-2 border-3 border-ink px-3 py-2 text-sm font-bold transition-all duration-100 ${
-                  on
-                    ? 'translate-x-[2px] translate-y-[2px] bg-ink text-paper shadow-nbpress'
-                    : 'bg-card shadow-nbsm hover:bg-card'
-                }`}
-              >
-                <span className={`grid h-4 w-4 place-items-center border-2 border-current`}>
-                  {on && <Icon name="Check" className="h-3 w-3" />}
-                </span>
-                {t}
-              </button>
-            );
-          })}
         </div>
 
-        <div className="mt-6 flex flex-wrap items-center gap-3 border-t-3 border-ink pt-5">
-          <Btn color="red" icon="ArrowRight">
-            Select the topic
-          </Btn>
-          <span className="font-mono text-[11px] font-bold uppercase tracking-widest">
-            {picked.length} selected · suggested track: Neural Networks & Deep Learning
-          </span>
+        {/* CURRENT GOAL */}
+        <div className="space-y-4">
+          <SectionTitle icon="Rocket">Current Goal</SectionTitle>
+          <Card className="p-6 h-64 flex flex-col">
+            <div className="mb-4">
+              <Tag color="yellow">Mastery Goal</Tag>
+            </div>
+            
+            <h3 className="font-display text-2xl uppercase mb-6 leading-tight">Pick A Course</h3>
+            
+            <div className="mb-2 flex items-center justify-between font-mono text-[10px] font-bold uppercase tracking-widest">
+              <span>Progress</span>
+              <span>0%</span>
+            </div>
+            
+            <div className="h-3 w-full rounded-full border-3 border-ink bg-card mb-auto overflow-hidden">
+              <div className="h-full bg-red w-0" />
+            </div>
+            
+            <Link to="/courses" className="mt-6 block">
+              <Btn color="red" className="w-full">
+                Browse all
+              </Btn>
+            </Link>
+          </Card>
         </div>
-      </Card>
+      </div>
+
     </div>
   );
 }

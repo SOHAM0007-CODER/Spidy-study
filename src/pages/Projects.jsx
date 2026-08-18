@@ -1,75 +1,89 @@
 import React, { useState } from 'react';
 import { projects } from '../data/mock';
-import { Card, Btn, Tag, Chip, Icon, PageHead, SectionTitle, FILL } from '../components/ui';
+import { Card, Btn, Tag, Icon, PageHead, SectionTitle } from '../components/ui';
 
 const LEVELS = ['All', 'Beginner', 'Intermediate', 'Advanced'];
 
 export default function Projects() {
   const [level, setLevel] = useState('All');
+  
+  const cycleLevel = () => {
+    const currentIndex = LEVELS.indexOf(level);
+    const nextIndex = (currentIndex + 1) % LEVELS.length;
+    setLevel(LEVELS[nextIndex]);
+  };
+
   const list = projects.filter((p) => level === 'All' || p.level === level);
 
+  const displayLevel = level === 'All' ? 'ADAPTIVE' : level.toUpperCase();
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 animate-fade-in">
       <PageHead
+        boxed={true}
         eyebrow="Multiverse Labs"
-        badge="Adaptive Portfolio Missions"
-        title="Projects"
-        sub="Build something a recruiter can open. Every lab ships with a system flow and a defined stack."
+        icon="FolderKanban"
+        title="Adaptive Portfolio Missions"
+        sub={`Generating ${displayLevel} projects based on your learning patterns.`}
         right={
-          <div className="flex flex-wrap gap-2">
-            {LEVELS.map((l) => (
-              <Chip key={l} active={level === l} onClick={() => setLevel(l)}>
-                {l}
-              </Chip>
-            ))}
-          </div>
+          <button 
+            onClick={cycleLevel}
+            className="flex items-center gap-3 rounded-lg border-3 border-ink bg-yellow px-4 py-3 shadow-nb hover:bg-red hover:text-onaccent transition-colors group text-ink"
+          >
+            <Icon name="Target" className="h-6 w-6" />
+            <span className="font-display text-xl uppercase leading-none">{displayLevel} LEVEL</span>
+          </button>
         }
       />
 
-      <SectionTitle right={<span className="eyebrow text-muted">{list.length} labs</span>}>
+      <SectionTitle right={`${list.length} LABS`}>
         Generate a resume-friendly project
       </SectionTitle>
 
       <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
         {list.map((p) => (
-          <Card key={p.id} hover className="flex flex-col">
-            <div className={`${FILL[p.color]} halftone flex items-center justify-between border-b-3 border-ink p-4 text-ink/20`}>
-              <span className="relative border-3 border-ink bg-card p-2 text-ink shadow-nbsm">
-                <Icon name="Code2" className="h-5 w-5" />
+          <Card key={p.id} hover className="flex flex-col p-5">
+            <div className="flex items-start justify-between mb-4">
+              <span className="flex h-12 w-12 items-center justify-center rounded-lg border-3 border-ink bg-red text-onaccent shadow-nbsm">
+                <Icon name="Network" className="h-6 w-6" />
               </span>
-              <Tag color="card">{p.level}</Tag>
+              <Tag color="yellow">{p.level}</Tag>
             </div>
 
-            <div className="flex flex-1 flex-col p-5">
-              <h3 className="font-display text-lg uppercase leading-tight">{p.title}</h3>
-              <p className="mt-2 text-sm font-medium text-muted">{p.blurb}</p>
+            <div className="flex flex-1 flex-col">
+              <h3 className="font-display text-xl uppercase leading-tight mb-3">{p.title}</h3>
+              
+              <div className="mb-5">
+                <div className="mb-1 font-mono text-[10px] font-bold uppercase tracking-widest text-violet">
+                  Use Case
+                </div>
+                <p className="text-sm font-bold text-ink leading-snug">{p.blurb}</p>
+              </div>
 
-              <div className="mt-4">
-                <div className="eyebrow mb-2 text-muted">System flow</div>
-                <div className="space-y-1.5">
-                  {p.flow.map((f, i) => (
-                    <div key={f} className="flex items-center gap-2 border-3 border-ink bg-paper px-2.5 py-1.5">
-                      <span className="grid h-5 w-5 place-items-center border-2 border-ink bg-yellow font-mono text-[9px] font-bold">
-                        {i + 1}
-                      </span>
-                      <span className="text-xs font-bold">{f}</span>
-                    </div>
-                  ))}
+              <div className="mb-5 rounded-lg border-3 border-ink bg-paper p-4">
+                <div className="mb-2 flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-widest text-cyan">
+                  <Icon name="GitBranch" className="h-3.5 w-3.5" />
+                  System Flow
+                </div>
+                <div className="text-xs font-bold leading-relaxed text-ink">
+                  {p.flow.join(' → ')}
                 </div>
               </div>
 
-              <div className="mt-4">
-                <div className="eyebrow mb-2 text-muted">Tech stack</div>
+              <div className="mb-6 flex-1">
+                <div className="mb-2 font-mono text-[10px] font-bold uppercase tracking-widest text-muted">
+                  Tech stack
+                </div>
                 <div className="flex flex-wrap gap-1.5">
                   {p.stack.map((s) => (
-                    <span key={s} className="border-3 border-ink bg-card px-2 py-1 font-mono text-[10px] font-bold uppercase">
+                    <span key={s} className="rounded-lg border-3 border-ink bg-paper px-2 py-1 font-mono text-[10px] font-bold uppercase text-ink shadow-nbsm">
                       {s}
                     </span>
                   ))}
                 </div>
               </div>
 
-              <Btn color={p.color} icon="Rocket" className="mt-5 w-full">
+              <Btn color="red" icon="Sparkles" className="w-full">
                 Start mission
               </Btn>
             </div>

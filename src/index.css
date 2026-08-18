@@ -4,22 +4,36 @@
 
 @layer base {
   :root {
-    --c-border: 16 16 20;      --c-paper: 245 240 230;
-    --c-card: 255 255 255;     --c-muted: 107 107 123;
-    --c-red: 255 59 48;        --c-blue: 169 190 232;
-    --c-yellow: 247 228 163;   --c-pink: 243 188 214;
-    --c-sky: 188 224 238;      --c-lime: 201 227 166;
-    --c-onaccent: 16 16 20;
-    --c-halftone: 16 16 20;    --c-halftone-a: 0.09;
+    --c-border:   10 10 15;
+    --c-paper:    247 245 242;
+    --c-card:     255 255 255;
+    --c-muted:    107 107 123;
+    --c-red:      245 5 79;
+    --c-cyan:     34 211 238;
+    --c-yellow:   255 232 26;
+    --c-pink:     255 92 157;
+    --c-violet:   124 58 237;
+    --c-blue:     45 91 255;
+    --c-lime:     138 226 52;
+    --c-sky:      76 201 240;
+    --c-onaccent: 10 10 15;
+    --c-halftone: 10 10 15; --c-halftone-a: 0.09;
   }
   .dark {
-    --c-border: 245 240 230;   --c-paper: 22 22 29;
-    --c-card: 34 34 44;        --c-muted: 155 155 173;
-    --c-red: 255 59 48;        --c-blue: 58 74 107;
-    --c-yellow: 107 95 46;     --c-pink: 107 63 85;
-    --c-sky: 47 84 100;        --c-lime: 68 90 50;
-    --c-onaccent: 245 240 230;
-    --c-halftone: 245 240 230; --c-halftone-a: 0.10;
+    --c-border:   247 245 242;
+    --c-paper:    18 18 24;
+    --c-card:     28 28 36;
+    --c-muted:    155 155 173;
+    --c-red:      245 5 79;
+    --c-cyan:     34 211 238;
+    --c-yellow:   255 232 26;
+    --c-pink:     255 92 157;
+    --c-violet:   124 58 237;
+    --c-blue:     45 91 255;
+    --c-lime:     138 226 52;
+    --c-sky:      76 201 240;
+    --c-onaccent: 10 10 15;
+    --c-halftone: 247 245 242; --c-halftone-a: 0.10;
   }
   html {
     scroll-behavior: smooth;
@@ -63,6 +77,15 @@
   }
   .eyebrow {
     @apply font-mono text-[11px] font-bold uppercase tracking-[.18em];
+  }
+  .heading-shadow {
+    text-shadow: 3px 2px 0 rgb(var(--c-cyan));
+  }
+  .heading-split {
+    text-shadow: -2px 0 0 rgb(var(--c-red)), 2px 0 0 rgb(var(--c-cyan));
+  }
+  .banner-taper {
+    clip-path: polygon(0 10%, 100% 0, 100% 100%, 0 90%);
   }
 }
 

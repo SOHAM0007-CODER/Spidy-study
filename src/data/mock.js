@@ -27,7 +27,9 @@ export const navItems = [
   { label: 'Profile', to: '/profile', icon: 'UserCircle', color: 'blue' },
 ];
 
-export const categories = ['All', 'AI / ML', 'Cybersecurity', 'Frontend', 'Backend', 'Data'];
+// IMPORTANT: The stats below (views, likes, comments) are STATIC MOCK VALUES.
+// Fetching real counts requires the YouTube Data API and a valid API key.
+export const categories = ['All', 'AI/ML', 'Full Stack', 'System Design', 'Frontend', 'Backend', 'DevOps', 'Cybersecurity', 'Systems', 'Design'];
 
 export const courses = [
   {
@@ -35,8 +37,14 @@ export const courses = [
     title: 'Neural Networks & Deep Learning',
     thumbnail: '/thumbnails/c1.jpg',
     blurb: 'Build intuition for backprop, gradients and layered representation from first principles.',
-    category: 'AI / ML',
+    category: 'AI/ML',
     level: 'Intermediate',
+    earthCode: 'EARTH-1610',
+    channel: '3Blue1Brown',
+    channelInitials: '3B',
+    channelColor: 'blue',
+    runtime: '1:15:30',
+    stats: { views: '14.8M', likes: '540K', comments: '22.1K' },
     missions: [
       { id: 'c1m1', title: 'What a neuron actually computes', youtubeId: 'REPLACE_ME', minutes: 14, completed: false, summary: 'Understand the mathematical foundation of a single artificial neuron.', notes: ['Inputs, weights, and biases', 'Activation functions (ReLU, Sigmoid)', 'Linear separation'] },
       { id: 'c1m2', title: 'The mechanics of Gradient Descent', youtubeId: 'REPLACE_ME', minutes: 18, completed: false, summary: 'How models learn by finding the local minima of a cost function.', notes: ['Cost functions', 'Learning rate', 'Stochastic vs Batch'] },
@@ -56,6 +64,7 @@ export const courses = [
       { id: 'c1q9', prompt: 'Which of these is a common regularization technique?', options: ['Increasing the learning rate', 'Adding Dropout layers', 'Removing the bias terms', 'Using Mean Squared Error'], correct: 1, explanation: 'Dropout randomly zeroes out neurons during training, forcing the network to learn robust, distributed representations and reducing overfitting.' },
       { id: 'c1q10', prompt: 'What shape of filter is commonly used in modern CNNs for image classification?', options: ['1x1 exclusively', '10x10', '3x3', 'Fully connected rows'], correct: 2, explanation: 'Small 3x3 filters stacked in deep layers are highly efficient and capture both local features and broader context.' }
     ],
+    topics: ['Mathematical Foundations of Neurons', 'Gradient Descent Mechanics', 'Backpropagation and Chain Rule', 'Layered Representations', 'Convolutional Filters'],
     hours: 9.5, color: 'red', tags: ['Backprop', 'CNN', 'Optimizers'], enrolled: true, progress: 62,
   },
   {
@@ -63,8 +72,14 @@ export const courses = [
     title: 'Natural Language Processing',
     thumbnail: '/thumbnails/c2.jpg',
     blurb: 'From bag-of-words to attention. Tokenizers, embeddings and transformer internals.',
-    category: 'AI / ML',
+    category: 'AI/ML',
     level: 'Advanced',
+    earthCode: 'EARTH-1204',
+    channel: 'Andrej Karpathy',
+    channelInitials: 'AK',
+    channelColor: 'red',
+    runtime: '2:40:15',
+    stats: { views: '2.1M', likes: '80K', comments: '3.4K' },
     missions: [
       { id: 'c2m1', title: 'Bag-of-words and TF-IDF', youtubeId: 'REPLACE_ME', minutes: 12, completed: false, summary: 'Representing text as sparse frequency vectors.', notes: ['Count vectorizer', 'Term Frequency', 'Inverse Document Frequency'] },
       { id: 'c2m2', title: 'Word embeddings and Word2Vec', youtubeId: 'REPLACE_ME', minutes: 20, completed: false, summary: 'Learning dense semantic vectors for words.', notes: ['CBOW vs Skip-gram', 'Cosine similarity', 'Semantic arithmetic'] },
@@ -83,6 +98,7 @@ export const courses = [
       { id: 'c2q9', prompt: 'What is the difference between CBOW and Skip-gram?', options: ['CBOW predicts a target word from context; Skip-gram predicts context from a target word', 'CBOW is for text, Skip-gram is for images', 'CBOW uses attention, Skip-gram uses RNNs', 'They are the exact same algorithm'], correct: 0, explanation: 'Continuous Bag of Words uses surrounding words to guess the middle word, while Skip-gram uses the middle word to guess the surrounding ones.' },
       { id: 'c2q10', prompt: 'Why is Self-Attention highly parallelizable?', options: ['It requires no matrix multiplication', 'Each token computation depends only on previous tokens sequentially', 'Computations for all tokens in a sequence can be performed simultaneously', 'It only runs on CPUs'], correct: 2, explanation: 'Because attention calculates interactions between all pairs directly without relying on sequential hidden states, it can be parallelized massively.' }
     ],
+    topics: ['Sparse Text Vectors & TF-IDF', 'Dense Embeddings (Word2Vec)', 'Sequential Recurrent Networks', 'Queries, Keys, and Values', 'Scaled Dot-Product Attention'],
     hours: 12, color: 'blue', tags: ['Tokenizers', 'Attention', 'Embeddings'], enrolled: true, progress: 28,
   },
   {
@@ -92,6 +108,12 @@ export const courses = [
     blurb: 'Break it, then fix it. XSS, CSRF, injection and the headers that stop them.',
     category: 'Cybersecurity',
     level: 'Intermediate',
+    earthCode: 'EARTH-9021',
+    channel: 'LiveOverflow',
+    channelInitials: 'LO',
+    channelColor: 'yellow',
+    runtime: '45:20',
+    stats: { views: '800K', likes: '45K', comments: '1.2K' },
     missions: [
       { id: 'c3m1', title: 'Cross-Site Scripting (XSS)', youtubeId: 'REPLACE_ME', minutes: 18, completed: false, summary: 'Injecting malicious scripts into web pages viewed by others.', notes: ['Reflected vs Stored', 'DOM-based XSS', 'Escaping HTML'] },
       { id: 'c3m2', title: 'Cross-Site Request Forgery (CSRF)', youtubeId: 'REPLACE_ME', minutes: 16, completed: false, summary: 'Forcing authenticated users to perform unwanted actions.', notes: ['SameSite cookies', 'Anti-CSRF tokens', 'Stateless APIs'] },
@@ -110,6 +132,7 @@ export const courses = [
       { id: 'c3q9', prompt: 'Which cookie attribute prevents JavaScript from accessing the cookie via document.cookie?', options: ['Secure', 'HttpOnly', 'SameSite', 'Path'], correct: 1, explanation: 'HttpOnly hides the cookie from client-side scripts, protecting session tokens from being stolen via XSS.' },
       { id: 'c3q10', prompt: 'What does HSTS enforce?', options: ['That the browser only connects to the site over HTTPS', 'That passwords must be complex', 'That sessions expire after 15 minutes', 'That CORS policies are respected'], correct: 0, explanation: 'HTTP Strict Transport Security forces the browser to upgrade all future requests to HTTPS, preventing downgrade attacks.' }
     ],
+    topics: ['Reflected vs Stored XSS', 'SameSite and CSRF Mitigation', 'Blind SQL Injection Techniques', 'HTTP Header Security Policies', 'DOM-Based Vulnerabilities'],
     hours: 7, color: 'yellow', tags: ['XSS', 'CSRF', 'Headers'], enrolled: false, progress: 0,
   },
   {
@@ -119,6 +142,12 @@ export const courses = [
     blurb: 'Reconciliation, fibers, and why your component re-rendered twelve times.',
     category: 'Frontend',
     level: 'Intermediate',
+    earthCode: 'EARTH-6160',
+    channel: 'Jack Herrington',
+    channelInitials: 'JH',
+    channelColor: 'pink',
+    runtime: '55:10',
+    stats: { views: '1.2M', likes: '60K', comments: '2.5K' },
     missions: [
       { id: 'c4m1', title: 'The Virtual DOM and Reconciliation', youtubeId: 'REPLACE_ME', minutes: 14, completed: false, summary: 'How React diffs trees efficiently.', notes: ['Render phase vs Commit phase', 'Heuristic diffing', 'The importance of keys'] },
       { id: 'c4m2', title: 'Fiber Architecture deep dive', youtubeId: 'REPLACE_ME', minutes: 24, completed: false, summary: 'Interruptible rendering and the Fiber node structure.', notes: ['Work units', 'Time slicing', 'Concurrent mode basics'] },
@@ -137,6 +166,7 @@ export const courses = [
       { id: 'c4q9', prompt: 'Why is mutating state directly (e.g. state.count = 1) bad in React?', options: ['It causes an infinite loop', 'It violates strict mode', 'React\'s reconciliation relies on object identity (reference changes) to trigger renders', 'It is a syntax error in JavaScript'], correct: 2, explanation: 'If you mutate the object, the reference remains the same. React sees the same reference and bails out of re-rendering.' },
       { id: 'c4q10', prompt: 'What is the Virtual DOM?', options: ['A shadow root in the browser', 'A lightweight JavaScript object representation of the actual DOM', 'A separate thread running in Web Workers', 'An iframe hosting the app'], correct: 1, explanation: 'React keeps a JS tree in memory representing the UI, compares it to a new tree (diffing), and calculates the minimal DOM operations needed.' }
     ],
+    topics: ['Virtual DOM and Heuristics', 'Fiber Nodes & Time Slicing', 'useEffect Lifecycle & Closures', 'Profiler & React.memo', 'Referential Equality'],
     hours: 5.5, color: 'pink', tags: ['Fiber', 'Hooks', 'Memo'], enrolled: true, progress: 81,
   },
   {
@@ -144,8 +174,14 @@ export const courses = [
     title: 'Systems Design for Scale',
     thumbnail: '/thumbnails/c5.jpg',
     blurb: 'Queues, caches, shards and the trade-offs interviewers actually probe.',
-    category: 'Backend',
+    category: 'System Design',
     level: 'Advanced',
+    earthCode: 'EARTH-8380',
+    channel: 'Hussein Nasser',
+    channelInitials: 'HN',
+    channelColor: 'sky',
+    runtime: '1:30:45',
+    stats: { views: '3.4M', likes: '120K', comments: '5.6K' },
     missions: [
       { id: 'c5m1', title: 'Load Balancing and Scaling out', youtubeId: 'REPLACE_ME', minutes: 16, completed: false, summary: 'Horizontal vs vertical scaling and distributing traffic.', notes: ['Round-robin', 'Consistent hashing', 'Layer 4 vs Layer 7'] },
       { id: 'c5m2', title: 'Caching strategies and Redis', youtubeId: 'REPLACE_ME', minutes: 22, completed: false, summary: 'Speeding up reads and avoiding database bottlenecks.', notes: ['Cache aside', 'Write-through', 'Eviction policies'] },
@@ -165,6 +201,7 @@ export const courses = [
       { id: 'c5q9', prompt: 'What is an LRU cache eviction policy?', options: ['Least Randomly Used', 'Least Recently Used', 'Longest Running Unit', 'Late Response Update'], correct: 1, explanation: 'When the cache is full, LRU evicts the items that haven\'t been accessed for the longest time.' },
       { id: 'c5q10', prompt: 'Why is Apache Kafka often chosen over RabbitMQ for event sourcing?', options: ['Kafka is much easier to set up', 'Kafka persists messages to a log, allowing consumers to replay past events', 'RabbitMQ does not support multiple consumers', 'Kafka guarantees exactly-once delivery by default'], correct: 1, explanation: 'Kafka is a distributed append-only log, meaning messages aren\'t destroyed when read. New consumers can replay history from the beginning.' }
     ],
+    topics: ['Horizontal vs Vertical Scaling', 'Cache Aside & Eviction', 'Sharding & Replication Strategies', 'Decoupling via Message Queues', 'CAP Theorem Trade-offs'],
     hours: 11, color: 'sky', tags: ['Caching', 'Sharding', 'CAP'], enrolled: false, progress: 0,
   },
   {
@@ -172,8 +209,14 @@ export const courses = [
     title: 'Statistics for Machine Learning',
     thumbnail: '/thumbnails/c6.jpg',
     blurb: 'Distributions, inference and the maths that stops your model lying to you.',
-    category: 'Data',
+    category: 'AI/ML',
     level: 'Beginner',
+    earthCode: 'EARTH-4200',
+    channel: 'StatQuest',
+    channelInitials: 'SQ',
+    channelColor: 'lime',
+    runtime: '2:10:00',
+    stats: { views: '5.6M', likes: '200K', comments: '8.9K' },
     missions: [
       { id: 'c6m1', title: 'Probability Distributions', youtubeId: 'REPLACE_ME', minutes: 17, completed: false, summary: 'Normal, Binomial, and Poisson distributions.', notes: ['PDFs and PMFs', 'Expected value', 'Variance and Standard Deviation'] },
       { id: 'c6m2', title: 'Hypothesis Testing & P-values', youtubeId: 'REPLACE_ME', minutes: 21, completed: false, summary: 'Determining if a result is statistically significant.', notes: ['Null hypothesis', 'Type I and Type II errors', 'Confidence intervals'] },
@@ -192,6 +235,7 @@ export const courses = [
       { id: 'c6q9', prompt: 'What does a 95% Confidence Interval actually mean?', options: ['There is a 95% chance the true parameter falls in this specific interval', 'If we repeated the experiment many times, 95% of the calculated intervals would contain the true parameter', '95% of the data falls within this interval', 'The result is 95% accurate'], correct: 1, explanation: 'The interval itself doesn\'t have a 95% probability. The confidence is in the procedure: over infinite repetitions, 95% of intervals generated will capture the true mean.' },
       { id: 'c6q10', prompt: 'In a normal distribution, approximately what percentage of data falls within one standard deviation of the mean?', options: ['50%', '68%', '95%', '99.7%'], correct: 1, explanation: 'According to the empirical rule (68-95-99.7), about 68% of the area under a normal curve lies within one standard deviation.' }
     ],
+    topics: ['Probability Distributions (Normal, Poisson)', 'P-values and Null Hypothesis', 'Type I and Type II Errors', 'Bayesian Priors and Likelihood', 'Bootstrapping & Resampling'],
     hours: 6, color: 'lime', tags: ['Bayes', 'Inference', 'Sampling'], enrolled: false, progress: 0,
   }
 ];
@@ -200,6 +244,7 @@ export const courses = [
 export const featuredCourse = {
   id: 'f1',
   title: 'Transformers, End to End',
+  thumbnail: '/thumbnails/c2.jpg',
   blurb:
     'One mission chain that takes you from raw text to a working attention block you wrote yourself. No hand-waving, no imported magic.',
   level: 'Advanced',
@@ -220,13 +265,13 @@ export const preLearningTopics = [
 ];
 
 export const velocityData = [
-  { day: 'Mon', velocity: 3 },
-  { day: 'Tue', velocity: 5 },
-  { day: 'Wed', velocity: 4 },
-  { day: 'Thu', velocity: 8 },
-  { day: 'Fri', velocity: 6 },
-  { day: 'Sat', velocity: 11 },
-  { day: 'Sun', velocity: 9 },
+  { day: 'S', velocity: 3 },
+  { day: 'M', velocity: 5 },
+  { day: 'T', velocity: 4 },
+  { day: 'W', velocity: 8 },
+  { day: 'T', velocity: 6 },
+  { day: 'F', velocity: 11 },
+  { day: 'S', velocity: 9 },
 ];
 
 export const learningTimeData = [
@@ -263,7 +308,7 @@ export const projects = [
     level: 'Beginner',
     color: 'red',
     stack: ['React', 'Tailwind', 'Vite', 'Netlify'],
-    flow: ['Wireframe', 'Component system', 'Content pass', 'Deploy'],
+    flow: ['Wireframe UI', 'Build component system', 'Add content pass', 'Deploy to production'],
   },
   {
     id: 'p2',
@@ -272,7 +317,7 @@ export const projects = [
     level: 'Intermediate',
     color: 'blue',
     stack: ['Node', 'Express', 'MongoDB', 'JWT'],
-    flow: ['Schema design', 'Routes + auth', 'Validation', 'Docs + tests'],
+    flow: ['Design schema', 'Build routes and auth', 'Add validation', 'Write docs and tests'],
   },
   {
     id: 'p3',
@@ -281,7 +326,7 @@ export const projects = [
     level: 'Intermediate',
     color: 'yellow',
     stack: ['Python', 'scikit-learn', 'pandas', 'Streamlit'],
-    flow: ['Corpus prep', 'Vectorise', 'Train + tune', 'Serve UI'],
+    flow: ['Prepare corpus', 'Vectorise text', 'Train and tune model', 'Serve via UI'],
   },
   {
     id: 'p4',
@@ -290,7 +335,7 @@ export const projects = [
     level: 'Advanced',
     color: 'pink',
     stack: ['React', 'Socket.io', 'Redis', 'Docker'],
-    flow: ['Socket layer', 'Presence', 'Optimistic UI', 'Load test'],
+    flow: ['Setup socket layer', 'Handle user presence', 'Build optimistic UI', 'Run load tests'],
   },
 ];
 

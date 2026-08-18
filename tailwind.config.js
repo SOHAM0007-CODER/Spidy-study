@@ -14,6 +14,8 @@ export default {
         pink: 'rgb(var(--c-pink) / <alpha-value>)',
         sky: 'rgb(var(--c-sky) / <alpha-value>)',
         lime: 'rgb(var(--c-lime) / <alpha-value>)',
+        cyan: 'rgb(var(--c-cyan) / <alpha-value>)',
+        violet: 'rgb(var(--c-violet) / <alpha-value>)',
         muted: 'rgb(var(--c-muted) / <alpha-value>)',
         onaccent: 'rgb(var(--c-onaccent) / <alpha-value>)',
       },

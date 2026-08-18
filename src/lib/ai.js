@@ -13,19 +13,25 @@ Style: sharp, warm, and direct — like a senior engineer who wants the candidat
 actually pass. Never robotic, never flattering.
 
 Rules:
+- Pick a topic based on the candidate's enrolled courses. If none, use general CS fundamentals.
 - Ask ONE question at a time, then wait.
 - Open with a short greeting plus your first question.
 - After each candidate answer: give a two-line verdict (what was right, what was
   missing), then immediately ask the next question.
-- Scale difficulty to the level given. Probe deeper when an answer is strong.
+- Scale difficulty based on the user's performance. Probe deeper when an answer is strong.
 - Keep every reply under 120 words. No markdown headings, no bullet dumps.
+- IMPORTANT: You MUST prefix EVERY question with a line containing exactly "META: <Concept> · <Difficulty>". For example: "META: React Internals · Advanced". Do this for every single question you ask.
 - After the 6th question, stop asking and give a final debrief: score out of 10,
   two strengths, two things to revise.`;
 
-export async function askInterviewer({ messages, topic, level }) {
+export async function askInterviewer({ messages, enrolledCourses }) {
   if (!API_KEY) {
     throw new Error('No API key. Add VITE_ANTHROPIC_API_KEY to your .env file and restart the dev server.');
   }
+
+  const topicContext = enrolledCourses?.length > 0 
+    ? `The candidate is enrolled in: ${enrolledCourses.join(', ')}.` 
+    : `The candidate has no enrolled courses. Focus on general CS fundamentals.`;
 
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
@@ -38,7 +44,7 @@ export async function askInterviewer({ messages, topic, level }) {
     body: JSON.stringify({
       model: MODEL,
       max_tokens: 700,
-      system: `${SYSTEM}\n\nTopic: ${topic}\nLevel: ${level}`,
+      system: `${SYSTEM}\n\n${topicContext}`,
       messages: messages.map((m) => ({ role: m.role, content: m.content })),
     }),
   });
