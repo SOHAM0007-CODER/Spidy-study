@@ -1,18 +1,19 @@
-import React, { useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useMemo, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid } from 'recharts';
 import { courses, velocityData, preLearningTopics, user } from '../data/mock';
 import { Card, Btn, Tag, Search, Icon, PageHead, SectionTitle, Progress, FILL } from '../components/ui';
+import { useTheme } from '../lib/theme';
+import { Thumb } from '../components/Thumb';
+
+const readVar = (n, alpha) =>
+  `rgb(${getComputedStyle(document.documentElement).getPropertyValue(n).trim()}${alpha ? ` / ${alpha}` : ''})`;
 
 function CourseCard({ c }) {
+  const navigate = useNavigate();
   return (
     <Card hover className="flex flex-col overflow-hidden">
-      <div className={`${FILL[c.color]} halftone relative border-b-3 border-ink px-4 py-6 text-ink/20`}>
-        <div className="relative flex items-start justify-between">
-          <Tag color="card">{c.category}</Tag>
-          <Tag color="card">{c.level}</Tag>
-        </div>
-      </div>
+      <Thumb course={c} />
       <div className="flex flex-1 flex-col p-4">
         <h3 className="font-display text-base uppercase leading-tight">{c.title}</h3>
         <p className="mt-2 flex-1 text-sm font-medium text-muted">{c.blurb}</p>
@@ -25,17 +26,17 @@ function CourseCard({ c }) {
         </div>
         <div className="mt-3 flex items-center gap-3 font-mono text-[10px] font-bold uppercase tracking-widest text-muted">
           <span className="flex items-center gap-1">
-            <Icon name="Layers" className="h-3 w-3" /> {c.missions} missions
+            <Icon name="Layers" className="h-3 w-3" /> {c.missions?.length || c.missions} missions
           </span>
           <span className="flex items-center gap-1">
             <Icon name="Clock" className="h-3 w-3" /> {c.hours} hr
           </span>
         </div>
-        <Link to="/courses" className="mt-4">
-          <Btn color={c.color} className="w-full">
+        <div className="mt-4">
+          <Btn color={c.color} className="w-full" onClick={() => navigate(`/mission/${c.id}`)}>
             Start mission
           </Btn>
-        </Link>
+        </div>
       </div>
     </Card>
   );
@@ -44,15 +45,32 @@ function CourseCard({ c }) {
 export default function Dashboard() {
   const [query, setQuery] = useState('');
   const [picked, setPicked] = useState(['Linear Algebra']);
+  const { theme } = useTheme();
+  const [c, setC] = useState(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setC({
+        border: readVar('--c-border'),
+        border18: readVar('--c-border', '0.18'),
+        red: readVar('--c-red'),
+        blue: readVar('--c-blue'),
+        yellow: readVar('--c-yellow'),
+        card: readVar('--c-card'),
+        ink: readVar('--c-border'),
+      });
+    }, 10);
+    return () => clearTimeout(timer);
+  }, [theme]);
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return courses;
     return courses.filter(
-      (c) =>
-        c.title.toLowerCase().includes(q) ||
-        c.category.toLowerCase().includes(q) ||
-        c.tags.some((t) => t.toLowerCase().includes(q))
+      (co) =>
+        co.title.toLowerCase().includes(q) ||
+        co.category.toLowerCase().includes(q) ||
+        co.tags.some((t) => t.toLowerCase().includes(q))
     );
   }, [query]);
 
@@ -61,24 +79,25 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-10">
-      <PageHead
-        eyebrow="Origin Point"
-        title={
-          <>
-            Multiverse
-            <br />
-            Learning
-          </>
-        }
-        sub="Every learner runs a different timeline. Pick a thread and start your course."
-        right={
-          <Link to="/courses">
-            <Btn color="red" icon="Rocket">
-              Start your course
-            </Btn>
-          </Link>
-        }
-      />
+      <Card className="relative overflow-hidden p-8 sm:p-10 animate-pop">
+        <div className="absolute inset-y-0 left-0 w-4 border-r-3 border-ink bg-red halftone" />
+        <div className="relative z-10 pl-2 sm:pl-4">
+          <div className="eyebrow mb-2 text-muted">Origin Point</div>
+          <h1 className="font-display text-4xl uppercase leading-none tracking-tight sm:text-5xl lg:text-6xl">
+            Multiverse<br />Learning
+          </h1>
+          <p className="mt-4 max-w-2xl text-base font-medium text-muted sm:text-lg">
+            Every learner runs a different timeline. Pick a thread and start your course.
+          </p>
+          <div className="mt-8">
+            <Link to="/courses">
+              <Btn color="red" icon="Rocket">
+                Start your course
+              </Btn>
+            </Link>
+          </div>
+        </div>
+      </Card>
 
       {/* Velocity + side stats */}
       <div className="grid gap-5 lg:grid-cols-3">
@@ -89,24 +108,26 @@ export default function Dashboard() {
             Learning Velocity
           </SectionTitle>
           <div className="h-56">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={velocityData} margin={{ top: 8, right: 8, left: -22, bottom: 0 }}>
-                <CartesianGrid stroke="#10101418" strokeDasharray="4 4" />
-                <XAxis dataKey="day" tick={{ fontSize: 11, fontWeight: 700 }} stroke="#101014" strokeWidth={2} />
-                <YAxis tick={{ fontSize: 11, fontWeight: 700 }} stroke="#101014" strokeWidth={2} />
-                <Tooltip
-                  contentStyle={{ border: '3px solid #101014', boxShadow: '4px 4px 0 #101014', borderRadius: 0, fontWeight: 700 }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="velocity"
-                  stroke="#FF3B30"
-                  strokeWidth={4}
-                  dot={{ r: 5, fill: '#FFD426', stroke: '#101014', strokeWidth: 3 }}
-                  activeDot={{ r: 7, fill: '#2D5BFF', stroke: '#101014', strokeWidth: 3 }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
+            {c && (
+              <ResponsiveContainer width="100%" height="100%" key={`line-${theme}`}>
+                <LineChart data={velocityData} margin={{ top: 8, right: 8, left: -22, bottom: 0 }}>
+                  <CartesianGrid stroke={c.border18} strokeDasharray="4 4" />
+                  <XAxis dataKey="day" tick={{ fontSize: 11, fontWeight: 700, fill: c.border }} stroke={c.border} strokeWidth={2} />
+                  <YAxis tick={{ fontSize: 11, fontWeight: 700, fill: c.border }} stroke={c.border} strokeWidth={2} />
+                  <Tooltip
+                    contentStyle={{ border: `3px solid ${c.border}`, boxShadow: `4px 4px 0 ${c.border}`, borderRadius: 0, fontWeight: 700, backgroundColor: c.card, color: c.ink }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="velocity"
+                    stroke={c.red}
+                    strokeWidth={4}
+                    dot={{ r: 5, fill: c.yellow, stroke: c.border, strokeWidth: 3 }}
+                    activeDot={{ r: 7, fill: c.blue, stroke: c.border, strokeWidth: 3 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            )}
           </div>
         </Card>
 
@@ -117,7 +138,7 @@ export default function Dashboard() {
               <Icon name="Brain" className="h-5 w-5" />
             </div>
             <div className="mt-2 font-display text-4xl leading-none">88%</div>
-            <div className="mt-3 border-3 border-ink bg-white">
+            <div className="mt-3 border-3 border-ink bg-card">
               <div className="h-3 bg-yellow" style={{ width: '88%' }} />
             </div>
           </Card>
@@ -183,7 +204,7 @@ export default function Dashboard() {
                 className={`flex items-center gap-2 border-3 border-ink px-3 py-2 text-sm font-bold transition-all duration-100 ${
                   on
                     ? 'translate-x-[2px] translate-y-[2px] bg-ink text-paper shadow-nbpress'
-                    : 'bg-card shadow-nbsm hover:bg-white'
+                    : 'bg-card shadow-nbsm hover:bg-card'
                 }`}
               >
                 <span className={`grid h-4 w-4 place-items-center border-2 border-current`}>

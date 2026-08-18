@@ -1,19 +1,21 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{js,jsx}'],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        ink: '#101014',
-        paper: '#F5F0E6',
-        card: '#FFFFFF',
-        red: '#FF3B30',
-        blue: '#2D5BFF',
-        yellow: '#FFD426',
-        pink: '#FF5CA8',
-        sky: '#4CC9F0',
-        lime: '#8AE234',
-        muted: '#6B6B7B',
+        ink: 'rgb(var(--c-border) / <alpha-value>)',
+        paper: 'rgb(var(--c-paper) / <alpha-value>)',
+        card: 'rgb(var(--c-card) / <alpha-value>)',
+        red: 'rgb(var(--c-red) / <alpha-value>)',
+        blue: 'rgb(var(--c-blue) / <alpha-value>)',
+        yellow: 'rgb(var(--c-yellow) / <alpha-value>)',
+        pink: 'rgb(var(--c-pink) / <alpha-value>)',
+        sky: 'rgb(var(--c-sky) / <alpha-value>)',
+        lime: 'rgb(var(--c-lime) / <alpha-value>)',
+        muted: 'rgb(var(--c-muted) / <alpha-value>)',
+        onaccent: 'rgb(var(--c-onaccent) / <alpha-value>)',
       },
       fontFamily: {
         display: ['"Archivo Black"', 'system-ui', 'sans-serif'],
@@ -21,10 +23,10 @@ export default {
         mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
       },
       boxShadow: {
-        nb: '5px 5px 0 0 #101014',
-        nbsm: '3px 3px 0 0 #101014',
-        nblg: '8px 8px 0 0 #101014',
-        nbpress: '1px 1px 0 0 #101014',
+        nb: '5px 5px 0 0 rgb(var(--c-border))',
+        nbsm: '3px 3px 0 0 rgb(var(--c-border))',
+        nblg: '8px 8px 0 0 rgb(var(--c-border))',
+        nbpress: '1px 1px 0 0 rgb(var(--c-border))',
       },
       borderWidth: { 3: '3px' },
       keyframes: {

@@ -127,7 +127,7 @@ export default function InterviewPrep() {
         </Card>
       ) : (
         <Card className="flex h-[calc(100vh-19rem)] min-h-[440px] flex-col overflow-hidden">
-          <div className="flex items-center justify-between border-b-3 border-ink bg-blue px-4 py-3 text-white">
+          <div className="flex items-center justify-between border-b-3 border-ink bg-blue px-4 py-3 text-ink">
             <div className="flex items-center gap-3">
               <span className="grid h-9 w-9 place-items-center border-3 border-ink bg-yellow text-ink">
                 <Icon name="Bot" className="h-5 w-5" />
@@ -173,7 +173,7 @@ export default function InterviewPrep() {
             )}
 
             {error && (
-              <div className="border-3 border-ink bg-red p-3 text-sm font-bold text-white shadow-nbsm">
+              <div className="border-3 border-ink bg-red p-3 text-sm font-bold text-onaccent shadow-nbsm">
                 {error}
               </div>
             )}

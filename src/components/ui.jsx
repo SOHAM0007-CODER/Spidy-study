@@ -12,13 +12,13 @@ export const FILL = {
 };
 
 export const TEXT_ON = {
-  red: 'text-white',
-  blue: 'text-white',
-  yellow: 'text-ink',
-  pink: 'text-ink',
-  sky: 'text-ink',
-  lime: 'text-ink',
-  card: 'text-ink',
+  red: 'text-onaccent',
+  blue: 'text-onaccent',
+  yellow: 'text-onaccent',
+  pink: 'text-onaccent',
+  sky: 'text-onaccent',
+  lime: 'text-onaccent',
+  card: 'text-onaccent',
 };
 
 export function Icon({ name, className = 'w-5 h-5', strokeWidth = 2.5 }) {

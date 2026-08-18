@@ -1,11 +1,14 @@
 import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { courses, categories, featuredCourse } from '../data/mock';
 import { Card, Btn, Tag, Chip, Search, Icon, PageHead, SectionTitle, Progress, FILL } from '../components/ui';
+import { Thumb } from '../components/Thumb';
 
 export default function Courses() {
   const [query, setQuery] = useState('');
   const [cat, setCat] = useState('All');
   const [selected, setSelected] = useState(null);
+  const navigate = useNavigate();
 
   const list = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -50,7 +53,7 @@ export default function Courses() {
             <h2 className="mt-3 font-display text-2xl uppercase leading-none sm:text-3xl">
               {featuredCourse.title}
             </h2>
-            <p className="mt-3 max-w-lg text-sm font-semibold text-white/85">{featuredCourse.blurb}</p>
+            <p className="mt-3 max-w-lg text-sm font-semibold text-ink/85">{featuredCourse.blurb}</p>
             <div className="mt-4 flex flex-wrap gap-1.5">
               {featuredCourse.tags.map((t) => (
                 <Tag key={t} color="card">
@@ -59,7 +62,7 @@ export default function Courses() {
               ))}
             </div>
             <div className="mt-6 flex flex-wrap gap-3">
-              <Btn color="yellow" icon="Rocket">
+              <Btn color="yellow" icon="Rocket" onClick={() => navigate(`/mission/${featuredCourse.id}`)}>
                 Launch mission
               </Btn>
               <Btn color="card" icon="Eye" onClick={() => setSelected(courses[0])}>
@@ -67,19 +70,8 @@ export default function Courses() {
               </Btn>
             </div>
           </div>
-          <div className="halftone flex flex-col justify-center gap-4 border-t-3 border-ink bg-red p-6 text-white/25 md:border-l-3 md:border-t-0">
-            <div className="relative">
-              <div className="font-display text-5xl leading-none text-white">{featuredCourse.missions}</div>
-              <div className="font-mono text-[10px] font-bold uppercase tracking-[.18em] text-white">
-                Missions in chain
-              </div>
-            </div>
-            <div className="relative">
-              <div className="font-display text-5xl leading-none text-white">{featuredCourse.hours}h</div>
-              <div className="font-mono text-[10px] font-bold uppercase tracking-[.18em] text-white">
-                Estimated depth
-              </div>
-            </div>
+          <div className="relative border-t-3 border-ink md:border-l-3 md:border-t-0">
+            <Thumb course={featuredCourse} />
           </div>
         </div>
       </Card>
@@ -92,12 +84,7 @@ export default function Courses() {
         <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
           {list.map((c) => (
             <Card key={c.id} hover className="flex flex-col">
-              <div className={`${FILL[c.color]} halftone border-b-3 border-ink px-4 py-5 text-ink/20`}>
-                <div className="relative flex items-center justify-between">
-                  <Tag color="card">{c.category}</Tag>
-                  {c.enrolled && <Tag color="card">Enrolled</Tag>}
-                </div>
-              </div>
+              <Thumb course={c} />
               <div className="flex flex-1 flex-col p-4">
                 <h3 className="font-display text-base uppercase leading-tight">{c.title}</h3>
                 <p className="mt-2 flex-1 text-sm font-medium text-muted">{c.blurb}</p>
@@ -111,10 +98,10 @@ export default function Courses() {
                   </div>
                 )}
                 <div className="mt-4 flex gap-2">
-                  <Btn color={c.color} className="flex-1" onClick={() => setSelected(c)}>
-                    View
+                  <Btn color={c.color} className="flex-1" onClick={() => navigate(`/mission/${c.id}`)}>
+                    Start mission
                   </Btn>
-                  <Btn color="card" icon="Play" className="px-3" aria-label="Launch" />
+                  <Btn color="card" icon="Play" className="px-3" aria-label="Launch" onClick={() => navigate(`/mission/${c.id}`)} />
                 </div>
               </div>
             </Card>
@@ -132,26 +119,24 @@ export default function Courses() {
             className="max-h-[88vh] w-full max-w-2xl overflow-y-auto border-3 border-ink bg-card shadow-nblg"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className={`${FILL[selected.color]} halftone flex items-start justify-between border-b-3 border-ink p-5 text-ink/20`}>
-              <div className="relative">
-                <Tag color="card">{selected.category}</Tag>
-                <h2 className="mt-2 font-display text-2xl uppercase leading-none text-ink">
-                  {selected.title}
-                </h2>
-              </div>
+            <div className="relative border-b-3 border-ink">
+              <Thumb course={selected} />
               <button
                 onClick={() => setSelected(null)}
-                className="relative border-3 border-ink bg-card p-1.5 text-ink shadow-nbsm"
+                className="absolute right-4 top-4 z-30 border-3 border-ink bg-card p-1.5 text-ink shadow-nbsm hover:bg-yellow hover:scale-105 transition-all"
                 aria-label="Close"
               >
                 <Icon name="X" className="h-4 w-4" />
               </button>
             </div>
             <div className="p-5">
+              <h2 className="mb-2 font-display text-2xl uppercase leading-none text-ink">
+                {selected.title}
+              </h2>
               <p className="text-sm font-semibold text-muted">{selected.blurb}</p>
               <div className="mt-4 grid grid-cols-3 gap-3">
                 {[
-                  ['Missions', selected.missions],
+                  ['Missions', selected.missions?.length || 0],
                   ['Depth', `${selected.hours} hr`],
                   ['Level', selected.level],
                 ].map(([k, v]) => (
@@ -175,7 +160,7 @@ export default function Courses() {
                   </div>
                 ))}
               </div>
-              <Btn color="red" icon="Rocket" className="mt-5 w-full">
+              <Btn color="red" icon="Rocket" className="mt-5 w-full" onClick={() => navigate(`/mission/${selected.id}`)}>
                 Launch mission
               </Btn>
             </div>

@@ -3,19 +3,37 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --c-border: 16 16 20;      --c-paper: 245 240 230;
+    --c-card: 255 255 255;     --c-muted: 107 107 123;
+    --c-red: 255 59 48;        --c-blue: 169 190 232;
+    --c-yellow: 247 228 163;   --c-pink: 243 188 214;
+    --c-sky: 188 224 238;      --c-lime: 201 227 166;
+    --c-onaccent: 16 16 20;
+    --c-halftone: 16 16 20;    --c-halftone-a: 0.09;
+  }
+  .dark {
+    --c-border: 245 240 230;   --c-paper: 22 22 29;
+    --c-card: 34 34 44;        --c-muted: 155 155 173;
+    --c-red: 255 59 48;        --c-blue: 58 74 107;
+    --c-yellow: 107 95 46;     --c-pink: 107 63 85;
+    --c-sky: 47 84 100;        --c-lime: 68 90 50;
+    --c-onaccent: 245 240 230;
+    --c-halftone: 245 240 230; --c-halftone-a: 0.10;
+  }
   html {
     scroll-behavior: smooth;
   }
   body {
     @apply bg-paper text-ink font-sans antialiased;
-    background-image: radial-gradient(#10101416 1px, transparent 1px);
+    background-image: radial-gradient(rgb(var(--c-halftone) / var(--c-halftone-a)) 1px, transparent 1px);
     background-size: 18px 18px;
   }
   ::selection {
     @apply bg-yellow text-ink;
   }
   :focus-visible {
-    outline: 3px solid #2d5bff;
+    outline: 3px solid rgb(var(--c-blue) / 1);
     outline-offset: 2px;
   }
   ::-webkit-scrollbar {
@@ -23,11 +41,11 @@
     height: 12px;
   }
   ::-webkit-scrollbar-track {
-    background: #f5f0e6;
+    background: var(--c-paper);
   }
   ::-webkit-scrollbar-thumb {
-    background: #101014;
-    border: 3px solid #f5f0e6;
+    background: var(--c-border);
+    border: 3px solid var(--c-paper);
   }
 }
 

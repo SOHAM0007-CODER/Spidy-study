@@ -9,22 +9,33 @@ import Revision from './pages/Revision';
 import Projects from './pages/Projects';
 import InterviewPrep from './pages/InterviewPrep';
 import Analytics from './pages/Analytics';
-import People from './pages/People';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
+import Mission from './pages/Mission';
 
 export default function App() {
   const [navOpen, setNavOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    return localStorage.getItem('adaptlearn-sidebar') === 'true';
+  });
   const { pathname } = useLocation();
 
   React.useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
 
+  const toggleSidebar = () => {
+    setSidebarCollapsed(prev => {
+      const next = !prev;
+      localStorage.setItem('adaptlearn-sidebar', next);
+      return next;
+    });
+  };
+
   return (
-    <div className="min-h-screen">
-      <Sidebar open={navOpen} onClose={() => setNavOpen(false)} />
-      <div className="lg:pl-[264px]">
+    <div className="min-h-screen overflow-x-hidden">
+      <Sidebar open={navOpen} onClose={() => setNavOpen(false)} collapsed={sidebarCollapsed} onToggleCollapse={toggleSidebar} />
+      <div className={`transition-[padding] duration-200 ${sidebarCollapsed ? 'lg:pl-[0px]' : 'lg:pl-[264px]'}`}>
         <Topbar onMenu={() => setNavOpen(true)} />
         <main className="mx-auto max-w-[1400px] px-4 py-8 sm:px-6 lg:px-8">
           <Routes>
@@ -35,9 +46,9 @@ export default function App() {
             <Route path="/projects" element={<Projects />} />
             <Route path="/interview-prep" element={<InterviewPrep />} />
             <Route path="/analytics" element={<Analytics />} />
-            <Route path="/people" element={<People />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/mission/:courseId" element={<Mission />} />
             <Route
               path="*"
               element={
