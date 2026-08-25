@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import SpiderMark from './SpiderMark';
 import { Tag } from './ui';
 
 export default function AuthLayout({ children }) {
@@ -14,35 +13,32 @@ export default function AuthLayout({ children }) {
         {/* Video or Fallback */}
         {!videoError ? (
           <video 
-            src="/spidey.mp4"
+            src="/spidy.mp4"
             autoPlay 
             loop 
             muted 
             playsInline
             onError={() => setVideoError(true)}
-            className="absolute inset-0 h-full w-full object-cover mix-blend-screen"
+            className="absolute inset-0 h-full w-full object-cover"
           />
         ) : (
           <img 
             src="/spidey-jump.png" 
             alt="Spider-Man" 
-            className="absolute inset-0 h-full w-full object-contain mix-blend-multiply opacity-90 p-10" 
+            className="absolute inset-0 h-full w-full object-contain p-10" 
           />
         )}
-        
-        {/* Faint halftone overlay */}
-        <div className="absolute inset-0 halftone opacity-30" />
         
         {/* Vignette to blend into the right panel */}
         <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-paper to-transparent z-10" />
 
         {/* Wordmark Overlay */}
         <div className="absolute top-8 left-8 flex items-center gap-3 z-20">
-          <div className="grid h-10 w-10 place-items-center rounded-lg border-3 border-ink bg-gradient-to-br from-red to-violet shadow-nbsm shrink-0">
-            <SpiderMark className="h-6 w-6 text-onaccent" />
+          <div className="grid h-10 w-10 place-items-center rounded-lg border-3 border-ink bg-gradient-to-br from-red to-violet shadow-nbsm shrink-0 overflow-hidden">
+            <img src="/image.png" alt="Logo" className="h-full w-full object-cover" />
           </div>
           <div className="font-display text-2xl uppercase leading-none tracking-tight">
-            <span className="text-white">ADAPT</span><span className="text-red">LEARN</span>
+            <span className="text-white">SPIDY</span><span className="text-red">STUDY</span>
           </div>
         </div>
 

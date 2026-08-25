@@ -5,7 +5,7 @@
 export const user = {
   name: 'Nirbhay',
   codename: 'NIRBHAY',
-  email: 'nirbhay@adaptlearn.io',
+  email: 'nirbhay@spidystudy.io',
   initial: 'N',
   rank: 'Web-Slinger',
   status: 'Active Multiverse User',

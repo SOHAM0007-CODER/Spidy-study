@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, Link, useLocation } from 'react-router-dom';
 import { navItems, user } from '../data/mock';
 import { Icon } from './ui';
 import SpiderMark from './SpiderMark';
@@ -26,14 +26,14 @@ export default function Sidebar({ open, onClose, collapsed, onToggleCollapse }) 
         <Link
           to="/"
           onClick={onClose}
-          className="flex items-center gap-3 border-b-3 border-ink px-5 py-5 text-ink"
+          className="flex items-center gap-3 border-b-3 border-ink px-5 py-5 text-ink group"
         >
-          <div className="grid h-10 w-10 place-items-center rounded-lg border-3 border-ink bg-gradient-to-br from-red to-violet shadow-nbsm shrink-0">
-            <SpiderMark className="h-6 w-6 text-onaccent" />
+          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg border-3 border-ink bg-gradient-to-br from-red to-violet shadow-nbsm group-hover:-rotate-6 transition-transform overflow-hidden">
+            <img src="/image.png" alt="Logo" className="h-full w-full object-cover" />
           </div>
           <div>
             <div className="font-display text-2xl uppercase leading-none tracking-tight">
-              ADAPT<span className="text-red">LEARN</span>
+              SPIDY<span className="text-red">STUDY</span>
             </div>
             <div className="mt-1 font-mono text-[9px] font-bold uppercase tracking-[.2em] opacity-90 text-muted">
               Multiverse HQ
