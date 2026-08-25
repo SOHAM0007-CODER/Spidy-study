@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import AuthLayout from '../components/AuthLayout';
 import { Card, Tag, Btn, Icon } from '../components/ui';
-import { signIn } from '../lib/auth';
+import { signIn, signInWithGoogle } from '../lib/auth';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -10,16 +10,31 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
 
-  const handleSubmit = (e) => {
+  const [error, setError] = useState(null);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setBusy(true);
-    // Fake authentication delay
-    setTimeout(() => {
-      // Use the email prefix as the name, or blank
-      const name = email.split('@')[0];
-      signIn(name);
+    setError(null);
+    try {
+      await signIn(email, password);
       navigate('/');
-    }, 600);
+    } catch (err) {
+      setError(err.message);
+      setBusy(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    setBusy(true);
+    setError(null);
+    try {
+      await signInWithGoogle();
+      // Supabase OAuth redirects to Google and back, so navigate('/') here isn't strictly needed
+    } catch (err) {
+      setError(err.message);
+      setBusy(false);
+    }
   };
 
   return (
@@ -39,6 +54,12 @@ export default function Login() {
         <p className="font-mono text-xs font-bold uppercase tracking-widest text-muted text-center mb-8">
           Enter your credentials to access your HQ
         </p>
+
+        {error && (
+          <div className="mb-6 p-4 rounded-lg bg-red/10 border-2 border-red text-red text-sm font-bold text-center">
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
           
@@ -105,7 +126,7 @@ export default function Login() {
           <div className="grid grid-cols-2 gap-4">
             <button
               type="button"
-              onClick={handleSubmit}
+              onClick={handleGoogleLogin}
               disabled={busy}
               className="flex items-center justify-center gap-2 rounded-lg border-3 border-ink bg-card py-3 font-display text-sm uppercase text-ink shadow-nbsm transition-all hover:bg-paper active:shadow-nbpress disabled:opacity-70"
             >

@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { user } from '../data/mock';
 import { Icon } from './ui';
 import { useTheme } from '../lib/theme';
 
-export default function Topbar({ onMenu }) {
+export default function Topbar({ onMenu, session }) {
   const { theme, toggle } = useTheme();
   const navigate = useNavigate();
+  const displayName = session?.user?.user_metadata?.display_name || session?.user?.user_metadata?.full_name || session?.user?.user_metadata?.name || 'Hero';
+  const initial = displayName.charAt(0).toUpperCase();
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState('');
 
@@ -81,11 +82,11 @@ export default function Topbar({ onMenu }) {
         </button>
         <Link
           to="/profile"
-          title={user.name}
+          title={displayName}
           aria-label="Open profile"
           className="grid h-9 w-9 place-items-center rounded-lg border-3 border-ink bg-red font-display text-sm text-onaccent shadow-nbsm hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-nb active:translate-x-[2px] active:translate-y-[2px] active:shadow-nbpress transition-all duration-100"
         >
-          {user.initial}
+          {initial}
         </Link>
       </div>
     </header>

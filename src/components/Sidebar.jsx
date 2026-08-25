@@ -95,8 +95,8 @@ export default function Sidebar({ open, onClose, collapsed, onToggleCollapse }) 
           <div className="p-4 border-t-3 border-ink">
             <button 
               onClick={() => {
-                import('../lib/auth').then(({ signOut }) => {
-                  signOut();
+                import('../lib/auth').then(async ({ signOut }) => {
+                  await signOut();
                   window.location.href = '/login';
                 });
               }}

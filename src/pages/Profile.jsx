@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
-import { user, badges, buildActivity } from '../data/mock';
+import { useOutletContext } from 'react-router-dom';
+import { badges, buildActivity, user } from '../data/mock';
 import { Card, Btn, Tag, Icon, PageHead, SectionTitle, FILL } from '../components/ui';
 import HeroArt from '../components/HeroArt';
 
@@ -33,6 +34,11 @@ function Heatmap({ cells }) {
 }
 
 export default function Profile() {
+  const { session } = useOutletContext();
+  const displayName = session?.user?.user_metadata?.display_name || session?.user?.user_metadata?.full_name || session?.user?.user_metadata?.name || 'Hero';
+  const email = session?.user?.email || 'hero@earth1610.com';
+  const initial = displayName.charAt(0).toUpperCase();
+
   const unlocked = badges.filter((b) => b.unlocked).length;
   const locked = badges.length - unlocked;
 
@@ -87,13 +93,13 @@ export default function Profile() {
               <div className="absolute inset-0 bg-pink -translate-x-[4px] -translate-y-[4px] rounded-xl border-3 border-ink" />
               {/* Main tile */}
               <div className="relative z-10 flex h-full w-full items-center justify-center rounded-xl border-3 border-ink bg-ink text-onaccent font-display text-5xl">
-                {user.initial}
+                {initial}
               </div>
             </div>
           </div>
           
-          <h2 className="font-display text-3xl uppercase leading-none">{user.name}</h2>
-          <p className="mt-1.5 text-sm font-bold text-muted">{user.email}</p>
+          <h2 className="font-display text-3xl uppercase leading-none">{displayName}</h2>
+          <p className="mt-1.5 text-sm font-bold text-muted">{email}</p>
           
           <div className="relative mt-6 mb-6 h-32 w-full overflow-hidden rounded-lg border-3 border-ink bg-cyan">
             <div className="absolute inset-0 bg-gradient-to-r from-red to-pink" />
@@ -151,8 +157,8 @@ export default function Profile() {
             
             <div className="grid gap-6 sm:grid-cols-2 mb-8">
               {[
-                ['Hero codename', user.codename, 'User'],
-                ['Multiverse network email', user.email, 'Mail'],
+                ['Hero codename', displayName, 'User'],
+                ['Multiverse network email', email, 'Mail'],
               ].map(([k, v, ic]) => (
                 <div key={k}>
                   <div className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted mb-2">{k}</div>

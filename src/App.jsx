@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route, useLocation, Navigate, Outlet } from 'react-router-dom';
-import { isAuthed } from './lib/auth';
+import { supabase } from './lib/supabase';
 import Sidebar from './components/Sidebar';
 import Topbar from './components/Topbar';
 import Dashboard from './pages/Dashboard';
@@ -17,13 +17,13 @@ import PreQuiz from './pages/PreQuiz';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 
-function AppShell() {
+function AppShell({ session }) {
   const [navOpen, setNavOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
     return localStorage.getItem('adaptlearn-sidebar') === 'true';
   });
 
-  if (!isAuthed()) {
+  if (!session) {
     return <Navigate to="/login" replace />;
   }
 
@@ -37,11 +37,11 @@ function AppShell() {
 
   return (
     <div className="min-h-screen overflow-x-hidden">
-      <Sidebar open={navOpen} onClose={() => setNavOpen(false)} collapsed={sidebarCollapsed} onToggleCollapse={toggleSidebar} />
+      <Sidebar session={session} open={navOpen} onClose={() => setNavOpen(false)} collapsed={sidebarCollapsed} onToggleCollapse={toggleSidebar} />
       <div className={`transition-[padding] duration-200 ${sidebarCollapsed ? 'lg:pl-[0px]' : 'lg:pl-[264px]'}`}>
-        <Topbar onMenu={() => setNavOpen(true)} />
+        <Topbar session={session} onMenu={() => setNavOpen(true)} />
         <main className="mx-auto max-w-[1400px] px-4 py-8 sm:px-6 lg:px-8">
-          <Outlet />
+          <Outlet context={{ session }} />
         </main>
       </div>
     </div>
@@ -50,17 +50,38 @@ function AppShell() {
 
 export default function App() {
   const { pathname } = useLocation();
+  const [session, setSession] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  React.useEffect(() => {
+  useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
 
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setLoading(false);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  if (loading) {
+    return null;
+  }
+
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
+      <Route path="/login" element={session ? <Navigate to="/" replace /> : <Login />} />
+      <Route path="/signup" element={session ? <Navigate to="/" replace /> : <Signup />} />
       
-      <Route element={<AppShell />}>
+      <Route element={<AppShell session={session} />}>
         <Route path="/" element={<Dashboard />} />
         <Route path="/courses" element={<Courses />} />
         <Route path="/my-learning" element={<MyLearning />} />

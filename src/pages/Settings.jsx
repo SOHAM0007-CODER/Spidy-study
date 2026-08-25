@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { user } from '../data/mock';
+import { useOutletContext } from 'react-router-dom';
 import { Card, Btn, Icon, PageHead, SectionTitle } from '../components/ui';
 
 function Toggle({ on, onChange, label, note }) {
@@ -25,6 +25,10 @@ function Toggle({ on, onChange, label, note }) {
 }
 
 export default function Settings() {
+  const { session } = useOutletContext();
+  const displayName = session?.user?.user_metadata?.display_name || session?.user?.user_metadata?.full_name || session?.user?.user_metadata?.name || 'Hero';
+  const email = session?.user?.email || 'hero@earth1610.com';
+  
   const [prefs, setPrefs] = useState({ reminders: true, sound: false, hardMode: true, digest: true });
   const set = (k) => (v) => setPrefs((p) => ({ ...p, [k]: v }));
 
@@ -37,9 +41,9 @@ export default function Settings() {
           <SectionTitle>Account</SectionTitle>
           <Card className="space-y-4 p-5">
             {[
-              ['Display name', user.name],
-              ['Email', user.email],
-              ['Hero codename', user.codename],
+              ['Display name', displayName],
+              ['Email', email],
+              ['Hero codename', displayName],
             ].map(([label, value]) => (
               <label key={label} className="block">
                 <span className="eyebrow text-muted">{label}</span>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import AuthLayout from '../components/AuthLayout';
 import { Card, Tag, Icon } from '../components/ui';
-import { signIn } from '../lib/auth';
+import { signUp } from '../lib/auth';
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -12,15 +12,28 @@ export default function Signup() {
   const [confirm, setConfirm] = useState('');
   const [busy, setBusy] = useState(false);
 
-  const handleSubmit = (e) => {
+  const [error, setError] = useState(null);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setBusy(true);
-    setTimeout(() => {
-      // Use codename or email prefix
+    setError(null);
+    
+    if (password !== confirm) {
+      setError("Passwords do not match");
+      setBusy(false);
+      return;
+    }
+
+    try {
       const name = codename.trim() || email.split('@')[0] || 'Hero';
-      signIn(name);
+      await signUp(email, password, name);
       navigate('/');
-    }, 600);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setBusy(false);
+    }
   };
 
   return (
@@ -40,6 +53,12 @@ export default function Signup() {
         <p className="font-mono text-xs font-bold uppercase tracking-widest text-muted text-center mb-8">
           Enter your credentials to access your HQ
         </p>
+
+        {error && (
+          <div className="mb-6 p-4 rounded-lg bg-red/10 border-2 border-red text-red text-sm font-bold text-center">
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
           

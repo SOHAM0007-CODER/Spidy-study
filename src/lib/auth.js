@@ -1,17 +1,37 @@
-// Demo-only fake authentication module.
-// Holds no real security, just writes a flag to localStorage to simulate auth state.
+import { supabase } from './supabase';
 
-const AUTH_KEY = 'adaptlearn-auth';
-
-export function isAuthed() {
-  return Boolean(localStorage.getItem(AUTH_KEY));
+export async function signUp(email, password, displayName) {
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        display_name: displayName,
+      }
+    }
+  });
+  if (error) throw error;
+  return data;
 }
 
-export function signIn(name) {
-  const displayName = name && name.trim() ? name.trim() : 'Hero';
-  localStorage.setItem(AUTH_KEY, displayName);
+export async function signIn(email, password) {
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+  if (error) throw error;
+  return data;
 }
 
-export function signOut() {
-  localStorage.removeItem(AUTH_KEY);
+export async function signInWithGoogle() {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+  });
+  if (error) throw error;
+  return data;
+}
+
+export async function signOut() {
+  const { error } = await supabase.auth.signOut();
+  if (error) throw error;
 }
